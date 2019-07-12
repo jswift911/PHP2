@@ -18,12 +18,11 @@ class PriceTag // Ценник
     function viewPriceTag()
     {
         echo "<h1>$this->goodName</h1><p>Номер заказа № $this->orderNumber</p><p>Цена за единицу: $$this->price</p>
-<p>Количество $this->quantity</p><h4>Итого: $ $this->totalPrice</h4>";
+<p>Количество: $this->quantity</p><h4>Итого: $ {$this->totalPrice()}</h4>";
     }
 }
 
 $order = new PriceTag(); // Создаем ценник
-$order->totalPrice(); // Подсчитываем итоговую сумму
 $order->viewPriceTag(); // Показываем ценник
 
 class discountPriceTag extends priceTag // Ценник со скидкой
@@ -40,15 +39,16 @@ class discountPriceTag extends priceTag // Ценник со скидкой
     // Метод выводит ценник с учетом скидки
     function viewDiscountPriceTag()
     {
-        echo "<p>Скидка: $this->discount %</p><h3>Цена с учетом скидки: $ $this->priceWithDiscount</h3>";
+        // Методы родителя
+        echo "<h1>$this->goodName</h1><p>Номер заказа № $this->orderNumber</p><p>Цена за единицу: $$this->price</p>
+<p>Количество: $this->quantity</p><h4>Итого: $ {$this->totalPrice()}</h4>";
+        // Методы ребенка
+        echo "<p>Скидка: $this->discount %</p><h3>Цена с учетом скидки: $ {$this->discountPrice()}</h3>";
     }
 }
 
 $order2 = new discountPriceTag(); // Создаем ценник со скидкой
-$order2->totalPrice(); // Подсчитываем итоговую сумму без скидки
-$order2->discountPrice(); // Подсчитываем итоговую сумму со скидкой
-$order2->viewPriceTag(); // Выводим ценник без скидки из родительского класса
-$order2->viewDiscountPriceTag(); // Выводим ценник со скидкой из ребенка
+$order2->viewDiscountPriceTag(); // Выводим ценник со скидкой
 
 
 // В данном примере при создании объекта а2 мы делаем ссылку на объект а1,
