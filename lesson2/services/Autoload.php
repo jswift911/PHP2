@@ -17,7 +17,7 @@ class Autoload
                 "/{$dir}/{$className}.php";
             /**
              * $withoutApp - Поиск, вырезает из пути 'App\'.
-             * '\\\/' - экранирование обратного слэша
+             * '\\\' - экранирование обратного слэша
              */
             $withoutApp = preg_replace('/App\\\/', '', $file);
 
