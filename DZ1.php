@@ -2,11 +2,19 @@
 
 class PriceTag // Ценник
 {
-    public $orderNumber = 1; // номер заказа
-    public $goodName = 'Ноутбук'; // наименование товара
-    public $price = 987; // цена
-    public $quantity = 4; // количество товара
+    public $orderNumber; // номер заказа
+    public $goodName; // наименование товара
+    public $price; // цена
+    public $quantity; // количество товара
     public $totalPrice; // итого
+
+    public function __construct($orderNumber = 1, $goodName = 'Ноутбук', $price = 987, $quantity = 4) // по умолчанию
+    {
+        $this->orderNumber = $orderNumber;
+        $this->goodName = $goodName;
+        $this->price = $price;
+        $this->quantity = $quantity;
+    }
 
     // Метод подсчета итоговой суммы
     function totalPrice()
@@ -27,8 +35,14 @@ $order->viewPriceTag(); // Показываем ценник
 
 class discountPriceTag extends priceTag // Ценник со скидкой
 {
-    public $discount = 10; // Скидка в %
+    public $discount; // Скидка в %
     public $priceWithDiscount; // Цена с учетом скидки
+
+    public function __construct($discount)
+    {
+        parent::__construct(2);
+        $this->discount = $discount;
+    }
 
     // Метод подсчитывает цену с учетом скидки
     function discountPrice()
@@ -47,7 +61,7 @@ class discountPriceTag extends priceTag // Ценник со скидкой
     }
 }
 
-$order2 = new discountPriceTag(); // Создаем ценник со скидкой
+$order2 = new discountPriceTag(10); // Создаем ценник со скидкой
 $order2->viewDiscountPriceTag(); // Выводим ценник со скидкой
 
 
