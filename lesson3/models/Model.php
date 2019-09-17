@@ -1,5 +1,4 @@
 <?php
-
 namespace app\models;
 
 use app\interfaces\IModel;
@@ -15,43 +14,44 @@ abstract class Model implements IModel
         $this->db = Db::getInstance();
     }
 
-    public function insert($params)
-    {
-        $tableName = $this->getTableName();
+    public function insert($params) {
         foreach ($this as $key => $value) {
             if ($key == "id" || $key == "db") {
                 continue;
             }
-            $tableRow[] = $key;
-            $stringTableRow = implode(",", $tableRow);
+            $params[] = $key;
+            $stringParams = implode(",", $params);
         }
-        $stringParams = "'" . implode("','", $params) . "'";
+        $sql = "INSERT INTO products (name,description,price) VALUES (:name,:description,:price)";
+//          var_dump($sql);
+        $this->db->execute($sql, $params);
+        $this->id = lastinsertId;
+        print_r($params);
 
-        $sql = "INSERT INTO $tableName ($stringTableRow) VALUES ($stringParams)";
-        var_dump($sql);
-        $response = $this->db->execute($sql, $params);
-        if ($response) {
-            $this->id = $response;
-        } else {
-            echo "Ошибка";
-        };
+        die();
+//        $sql = "INSERT INTO ($key) VALUES ";
+//        var_dump($sql);
+//        $this->db->execute($sql);
+       // $this->id = lastinsertId;
+
     }
 
-    public function delete()
-    { }
-    public function update()
-    { }
+    public function delete() {
 
-    public function getOne($id)
-    {
+    }
+    public function update() {
+
+    }
+
+    public function getOne($id) {
         $tableName = $this->getTableName();
         $sql = "SELECT * FROM {$tableName} WHERE id = :id";
         return $this->db->queryOne($sql, ['id' => $id]);
     }
-    public function getAll()
-    {
+    public function getAll() {
         $tableName = $this->getTableName();
         $sql = "SELECT * FROM {$tableName}";
         return $this->db->queryAll($sql);
     }
+
 }

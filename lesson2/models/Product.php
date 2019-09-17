@@ -11,7 +11,9 @@ class Product extends Model
 
     public function getTableName()
     {
-        return 'products';
+        return 'product';
     }
+
+
 
 }

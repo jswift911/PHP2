@@ -18,23 +18,32 @@ abstract class Model implements IModel
     public function insert($params)
     {
         $tableName = $this->getTableName();
-        foreach ($this as $key => $value) {
-            if ($key == "id" || $key == "db") {
-                continue;
+        $column = '';
+        $value = '';
+        foreach ($this as $thisKey => $thisValue) {
+            foreach ($params as $ParamsKey => $ParamsValue) {
+                if ($thisKey === $ParamsKey) {
+                    $this->$thisKey = $ParamsValue;
+                }
             }
-            $tableRow[] = $key;
-            $stringTableRow = implode(",", $tableRow);
+            if (!is_null($this->$thisKey) && !is_object($this->$thisKey)) {
+                $column .= "$thisKey, ";
+                $value  .= ":$thisKey, ";
+            }
         }
-        $stringParams = "'" . implode("','", $params) . "'";
-
-        $sql = "INSERT INTO $tableName ($stringTableRow) VALUES ($stringParams)";
+        $column = substr($column, 0, -2);
+        $value = substr($value, 0, -2);
+        $sql = "INSERT INTO $tableName ($column) VALUES ($value)";
         var_dump($sql);
+        // die();
+        // $sql = "INSERT INTO products (name, description, price) VALUES (:name, :description, :price)";
         $response = $this->db->execute($sql, $params);
         if ($response) {
             $this->id = $response;
         } else {
             echo "Ошибка";
         };
+        var_dump($this);
     }
 
     public function delete()
