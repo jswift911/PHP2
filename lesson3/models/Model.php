@@ -1,4 +1,5 @@
 <?php
+
 namespace app\models;
 
 use app\interfaces\IModel;
@@ -14,44 +15,74 @@ abstract class Model implements IModel
         $this->db = Db::getInstance();
     }
 
-    public function insert($params) {
+
+    /**
+     * @param $params - массив параметров в зависимости от класса
+     */
+    public function insert($params)
+    {
+        $tableName = $this->getTableName();
         foreach ($this as $key => $value) {
             if ($key == "id" || $key == "db") {
                 continue;
             }
-            $params[] = $key;
-            $stringParams = implode(",", $params);
+
+            $tableRow[] = $key;
+            $stringTableRow = implode(",", $tableRow);
         }
-        $sql = "INSERT INTO products (name,description,price) VALUES (:name,:description,:price)";
-//          var_dump($sql);
+        $stringParams = "'" . implode("','", $params) . "'";
+        $sql = "INSERT INTO $tableName ($stringTableRow) VALUES ($stringParams)";
+        var_dump($sql);
         $this->db->execute($sql, $params);
-        $this->id = lastinsertId;
-        print_r($params);
-
-        die();
-//        $sql = "INSERT INTO ($key) VALUES ";
-//        var_dump($sql);
-//        $this->db->execute($sql);
-       // $this->id = lastinsertId;
 
     }
 
-    public function delete() {
+    /**
+     * @param $params - 1 параметр (name,login и т.д.)
+     */
+    public function delete($params)
+    {
+        $tableName = $this->getTableName();
+        foreach ($this as $key => $value) {
+            if ($key == "id" || $key == "db") {
+                continue;
+            }
+            $tableRow[] = $key;
+        }
+        $stringParams = "'" . implode("','", $params) . "'";
+        $sql = "DELETE FROM $tableName WHERE `{$tableRow[0]}` = $stringParams LIMIT 1";
+        var_dump($sql);
+        $this->db->execute($sql, $params);
 
     }
-    public function update() {
+
+    public function update($params)
+    {
+        $tableName = $this->getTableName();
+        foreach ($this as $key => $value) {
+            if ($key == "id" || $key == "db") {
+                continue;
+            }
+            $tableRow[] = $key;
+            $stringTableRow = implode(",", $tableRow);
+        }
+        $stringParams = "'" . implode("','", $params) . "'";
+        $sql = "UPDATE $tableName SET `$tableRow[0]` = $stringParams LIMIT 1";
+        var_dump($sql);
+        $this->db->execute($sql, $params);
 
     }
 
-    public function getOne($id) {
+    public function getOne($id)
+    {
         $tableName = $this->getTableName();
         $sql = "SELECT * FROM {$tableName} WHERE id = :id";
         return $this->db->queryOne($sql, ['id' => $id]);
     }
-    public function getAll() {
+    public function getAll()
+    {
         $tableName = $this->getTableName();
         $sql = "SELECT * FROM {$tableName}";
         return $this->db->queryAll($sql);
     }
-
 }

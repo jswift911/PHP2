@@ -39,16 +39,14 @@ class Db
             $this->config['charset']
         );
     }
-//SELECT * FROM product WHERE id = $id $params = ['id' => 1]
     private function query($sql, $params) {
         $pdoStatement = $this->getConnection()->prepare($sql);
-        $pdoStatement->execute($params);
-        return $pdoStatement;
+        $response = $pdoStatement->execute($params);
+        return $response ? (int)$this->connection->lastInsertId() : false;
     }
-
+    
     public function execute($sql, $params = []) {
-        $this->query($sql, $params);
-        return true;
+        return $this->query($sql, $params);
     }
 
     public function queryOne($sql, $params = []) {

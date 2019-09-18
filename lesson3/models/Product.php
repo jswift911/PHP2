@@ -14,7 +14,4 @@ class Product extends Model
         return 'products';
     }
 
-
-
-
 }

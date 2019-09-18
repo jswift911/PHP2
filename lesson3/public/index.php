@@ -11,16 +11,22 @@ spl_autoload_register([new Autoload(), 'loadClass']);
 
 
 $product = new Product();
-$product->insert([
-    $name => 'Кофе',
-    $description => 'Молотый',
-    $price => 10,
-]);
-//var_dump($product->getOne(1));
-//
-//
-//
-//
-//
-//var_dump($product);
 
+
+// Массив параметров в зависимости от класса
+//$product->insert([
+//    "name"=>"Кофе",
+//    "description"=> "Молотый",
+//    "price"=>10,
+//]);
+
+
+// Только первый параметр в зависимости от класса (name, login и т.д.)
+//$product->delete([
+//    "name"=>"Кофе"
+//    ]);
+
+// Только первый параметр в первой строке в зависимости от класса (name, login и т.д.)
+//$product->update([
+//    "name"=>"Кофе",
+//]);
