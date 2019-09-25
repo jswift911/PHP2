@@ -21,7 +21,6 @@ class Db
 
     private function getConnection() {
         if (is_null($this->connection)) {
-            var_dump("Подключаюсь к БД...");
             $this->connection =  new \PDO($this->prepareDSNstring(),
                 $this->config['login'],
                 $this->config['password']);
@@ -39,14 +38,22 @@ class Db
             $this->config['charset']
         );
     }
+//SELECT * FROM product WHERE id = $id $params = ['id' => 1]
     private function query($sql, $params) {
         $pdoStatement = $this->getConnection()->prepare($sql);
-        $response = $pdoStatement->execute($params);
-        return $response ? (int)$this->connection->lastInsertId() : false;
+        $pdoStatement->execute($params);
+        return $pdoStatement;
     }
-    
+
+    public function queryObject($sql, $params, $class) {
+        $pdoStatement = $this->query($sql, $params);
+        $pdoStatement->setFetchMode(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $class);
+        return $pdoStatement->fetch();
+    }
+
     public function execute($sql, $params = []) {
-        return $this->query($sql, $params);
+        $this->query($sql, $params);
+        return true;
     }
 
     public function queryOne($sql, $params = []) {
@@ -56,5 +63,18 @@ class Db
     public function queryAll($sql, $params = []) {
         return $this->query($sql, $params)->fetchAll();
     }
+
+    public function lastInsertId() {
+        return $this->connection->lastInsertId();
+    }
+
+    public function executeLimit($sql, $col){
+        $pdoStatement = $this->getConnection()->prepare($sql);
+        $pdoStatement->bindValue(1, $col, \PDO::PARAM_INT);
+        $pdoStatement->execute();
+        $data = $pdoStatement->fetchAll();
+        return $data;
+    }
+
 
 }

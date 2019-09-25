@@ -1,5 +1,6 @@
 <?
 
+use app\engine\Render;
 use app\models\{Basket, Product, User};
 use app\engine\Db;
 
@@ -8,17 +9,41 @@ include $_SERVER['DOCUMENT_ROOT'] . "/../engine/Autoload.php";
 
 spl_autoload_register([new Autoload(), 'loadClass']);
 
+require_once '../vendor/autoload.php';
 
 
-$product = new Product();
 
-$product->insert([
-    "name"=>"Кофе",
-    "description"=> "Молотый",
-    "price"=>10,
-    ]);
+$controllerName = $_GET['c'] ?: 'product';
+$actionName = $_GET['a'];
 
-// var_dump($product->getOne(1));
+$controllerClass = CONTROLLER_NAMESPACE . ucfirst($controllerName)  . "Controller";
 
-// var_dump($product);
+if (class_exists($controllerClass)) {
+    $controller = new $controllerClass(new Render());
+    $controller->runAction($actionName);
+} else {
+    echo "Не правильный контроллер";
+}
+
+
+
+
+/**
+ * @var Product $product
+ */
+
+
+// Добавление/изменение
+//$product = new Product("Сникерс", "Вкусный", 30);
+//$product = Product::getOne(4);
+//$product->update();
+//$product->save();
+
+
+//Удаление
+
+//$product = Product::getOne(1);
+//$product->delete();
+
+
 
